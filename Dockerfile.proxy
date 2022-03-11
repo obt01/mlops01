@@ -1,0 +1,20 @@
+FROM python:3.9-slim
+
+ENV APP_DIR /app
+WORKDIR ${APP_DIR}
+
+COPY requirements.txt ${APP_DIR}
+
+RUN apt update && \
+    pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+COPY ./src/ ${APP_DIR}/src/
+
+ENV PYTHONPATH /app
+# RUN export PYTHONPATH="/app/src"
+# RUN echo 'export PYTHONPATH="/app/src"' > ~/.bashrc
+
+COPY ./run.sh ${APP_DIR}
+RUN chmod +x ${APP_DIR}/run.sh
+CMD ["./run.sh"]
