@@ -1,0 +1,6 @@
+scikit-learn
+fastapi
+uvicorn
+gunicorn
+flake8
+mypy

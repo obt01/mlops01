@@ -1,0 +1,49 @@
+FROM python:3.10-slim as builder
+
+ARG HOME_DIR=/workspace
+
+WORKDIR ${HOME_DIR}
+ADD ./requirements_pred.txt ${HOME_DIR}
+COPY ./models/output_torch_model_file.py ${HOME_DIR}
+COPY ./data ${HOME_DIR}/data
+
+RUN apt-get -y update && \
+    apt-get clean && \
+    pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements_pred.txt
+
+ARG PYTORCH_URL=https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html 
+RUN pip install --pre torch torchvision -f ${PYTORCH_URL} && \
+    python -m output_torch_model_file
+
+
+
+
+
+FROM pytorch/torchserve:0.5.3-cpu
+
+ARG BUILDER_HOME=/workspace
+ENV MODEL_SERVER_DIR /home/model-server
+ENV MODEL_STORE_DIR ${MODEL_SERVER_DIR}/model-store
+
+COPY --from=builder ${BUILDER_HOME}/resnet-101.pt ${MODEL_SERVER_DIR}
+COPY --from=builder ${BUILDER_HOME}/data ${MODEL_SERVER_DIR}/data
+
+USER root
+RUN printf "\nservice_envelope=json" >> ${MODEL_SERVER_DIR}/config.properties
+USER model-server
+
+RUN torch-model-archiver \
+  --model-name=resnet-101 \
+  --version=1.0 \
+  --serialized-file=./resnet-101.pt \
+  --extra-files=./data/resnet_labels.json \
+  --handler=image_classifier \
+  --export-path=${MODEL_STORE_DIR}
+
+CMD ["torchserve", \
+     "--start", \
+    #  "--model_store", "model_store", \
+    #  "--ts-config=/home/model-server/config.properties", \
+     "--models", "resnet-101=resnet101.mar", \
+     ]

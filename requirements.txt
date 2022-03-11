@@ -1,0 +1,13 @@
+numpy
+fastapi
+uvicorn
+gunicorn
+Pillow
+torch
+torchvision
+onnx
+onnxruntime
+flake8
+mypy
+grpcio-tools
+requests
