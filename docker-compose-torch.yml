@@ -1,8 +1,22 @@
 version: '3'
 
 services:
-  torch-serve:
-    container_name: torch-serve-test
+  proxy:
+    container_name: proxy
+    build:
+      dockerfile: Dockerfile.proxy
+      context: .
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - torch-serve
+    tty: true
+ 
+  torch-serve-test:
+    container_name: torch-serve
     build:
       dockerfile: Dockerfile.torchserve
       context: .
@@ -12,7 +26,8 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-      - "8083:8083"
-      - "7070:7070"
-      - "7071:7071"
+      - "8082:8082"
+        # - "8083:8083"
+        # - "7070:7070"
+        # - "7071:7071"
     tty: true
