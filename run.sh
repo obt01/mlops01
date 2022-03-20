@@ -3,22 +3,22 @@
 set -eu
 
 APP_NAME="src.app.main:app"
-HOST="0.0.0.0"
-PORT="8000"
-WORKERS=2
-UVICORN_WORKER="uvicorn.workers.UvicornWorker"
-LOG_LEVEL="info"
-BACKLOG=2048
-MAX_REQUESTS=8192
-MAX_REQUESTS_JITTER=512
+APP_HOST="0.0.0.0"
+APP_PORT="8000"
+# WORKERS=2
+# UVICORN_WORKER="uvicorn.workers.UvicornWorker"
+# LOG_LEVEL="info"
+# BACKLOG=2048
+# MAX_REQUESTS=8192
+# MAX_REQUESTS_JITTER=512
 
 uvicorn ${APP_NAME} \
-    --host ${HOST} \
-    --port ${PORT} \
+    --host ${APP_HOST} \
+    --port ${APP_PORT} \
     --reload
 
 # gunicorn ${APP_NAME} \
-#     -b ${HOST}:${PORT} \
+#     -b ${APP_HOST}:${APP_PORT} \
 #     -w ${WORKERS} \
 #     -k ${UVICORN_WORKER} \
 #     --log-level ${LOG_LEVEL} \

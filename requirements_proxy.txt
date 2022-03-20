@@ -1,5 +1,6 @@
 scikit-learn
 fastapi
+python-multipart
 uvicorn
 gunicorn
 flake8

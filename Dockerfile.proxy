@@ -15,6 +15,6 @@ ENV PYTHONPATH /app
 # RUN export PYTHONPATH="/app/src"
 # RUN echo 'export PYTHONPATH="/app/src"' > ~/.bashrc
 
-# COPY ./run.sh ${APP_DIR}
-# RUN chmod +x ${APP_DIR}/run.sh
-# CMD ["./run.sh"]
+COPY ./run.sh ${APP_DIR}
+RUN chmod +x ${APP_DIR}/run.sh
+CMD ["./run.sh"]

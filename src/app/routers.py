@@ -1,50 +1,52 @@
 from __future__ import annotations
-import requests
 import json
-from fastapi import APIRouter
-import urllib.request
-import urllib.parse
+import requests
+import io
+from PIL import Image
+from fastapi import APIRouter, Request, UploadFile
 # from src.ml.prediction import classifier
 
 router = APIRouter()
+PREDICT_URL = "http://host.docker.internal:8080/predictions/resnet101"
+
+def image_to_byte_array(image:Image):
+  imgByteArr = io.BytesIO()
+  image.save(imgByteArr, format=image.format)
+  imgByteArr = imgByteArr.getvalue()
+  return imgByteArr
 
 
-# data = urllib.parse.urlencode({'foo': 'bar'}).encode('utf-8')
-# request = urllib.request.Request('http://www.example.com', data)
-# response = urllib.request.urlopen(request)
-# print(response.getcode())
-# html = response.read()
-# print(html.decode('utf-8'))
-
-@router.get("/health")
-def health() -> dict[str, str]:
-    """
-    ヘルスチェック
-    """
-    return {"health": "ok"}
-
-
-@router.get("/health_torchserve")
-def health_torchserve() -> dict[str, str]:
-    """
-    ヘルスチェック
-    """
-    res = urllib.request.urlopen("http://localhost:8080/ping")
-    # res = urllib.request.urlopen("https://google.com")
-    # res = requests.get("http://host.docker.internal:8080/ping")
-    # res = requests.get("https://google.com")
-    return {"health": res}
+@router.post("/predict")
+def predict(file: UploadFile = None):
+    img_bytes = file.file._file
+    res = requests.post(PREDICT_URL, data=img_bytes)
+    if res.status_code == 200:
+        output = res.json()
+        return output
+    return res.json()
 
 
 @router.get("/predict/test")
 def predict_test() -> dict[str, float]:
-    """
-    推論テスト
-    """
     img_path = "/app/data/bobby.jpg"
-    url = "http://host.docker.internal:8080/predictions/resnet101"
-    with open(img_path, "rb") as img:
-        data = json.dumps({"data": img})
-        # print(vars(img))
-        res = requests.post(url, files=data)
-    return res
+    with Image.open(img_path) as img:
+        img_bytes = image_to_byte_array(img)
+    res = requests.post(PREDICT_URL, data=img_bytes)
+    if res.status_code == 200:
+        output = res.json()
+        return output
+    return res.json()
+
+
+@router.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "Healthy"}
+
+
+@router.get("/health_torchserve")
+def health_torchserve() -> dict[str, str]:
+    url = "http://host.docker.internal:8080/ping"
+    res = requests.post(url)
+    if res.status_code == 200:
+        return res.json()
+    return {"status": res.json()}
