@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  ploxy:
+    container_name: mlops_test_proxy
+    build:
+      dockerfile: Dockerfile.proxy
+      context: .
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+     -  "8000:8000"
+    tty: true
+    depends_on:
+      - pred
+
+
+  pred:
+    container_name: mlops_test_pred
+    build:
+      dockerfile: Dockerfile.pred
+      context: .
+    restart: always
+    ports:
+      - "8001:8001"
+      - "50051:50051"
