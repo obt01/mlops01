@@ -3,5 +3,6 @@ fastapi
 python-multipart
 uvicorn
 gunicorn
+redis
 flake8
 mypy
