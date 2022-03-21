@@ -8,9 +8,8 @@ steps:
   id: docker-build-torchserve
 
 - name: gcr.io/cloud-builders/gcloud
-  entrypoint: bash
   args: [
-    '-c', '|', 'gcloud', 'container', 'clusters', 'create', '${_CLUSTER_NAME}',
+    'gcloud', 'container', 'clusters', 'create', '${_CLUSTER_NAME}',
     '--zone=asia-northeast1', '--no-enable-autoupgrade'
     ]
   id: create-cluster
