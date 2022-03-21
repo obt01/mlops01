@@ -4,9 +4,17 @@ steps:
   args: ['build', '-t', 'gcr.io/dev-mlops/proxy', '-f', 'Dockerfile.proxy', '.']
   id: docker build proxy
 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/dev-mlops/proxy:latest']
+  id: docker push proxy
+
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f','Dockerfile.torchserve', '.']
   id: docker-build-torchserve
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/dev-mlops/torch-serve-image:latest']
+  id: docker push proxy
 
 # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
 #   entrypoint: 'gcloud'
@@ -19,7 +27,3 @@ steps:
 # - name: gcr.io/cloud-builders/gke-deploy
 #   args: ['run', '--filename=k8s', '--location=asia-northeast1', '--cluster=${_CLUSTER_NAME}']
 #   id: GKE-deploy
-
-images:
-- 'gcr.io/dev-mlops/torch-serve-image:latest'
-- 'gcr.io/dev-mlops/proxy-image:latest'
