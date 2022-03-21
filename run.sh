@@ -4,7 +4,7 @@ set -eu
 
 APP_NAME="src.app.main:app"
 APP_HOST="0.0.0.0"
-APP_PORT="8000"
+APP_PORT="8010"
 # WORKERS=2
 # UVICORN_WORKER="uvicorn.workers.UvicornWorker"
 # LOG_LEVEL="info"

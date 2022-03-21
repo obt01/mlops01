@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8010:8010"
     depends_on:
       - torch-serve
     tty: true

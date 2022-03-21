@@ -4,5 +4,7 @@ python-multipart
 uvicorn
 gunicorn
 redis
+Pillow
+requests
 flake8
 mypy
