@@ -27,4 +27,5 @@ steps:
 - name: gcr.io/cloud-builders/gke-deploy
   args: ['run', '--filename=k8s', '--location=asia-northeast1', '--cluster=${_CLUSTER_NAME}']
   id: GKE-deploy
+
 timeout: 1200s
