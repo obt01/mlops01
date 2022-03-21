@@ -16,14 +16,14 @@ steps:
   args: ['push', 'gcr.io/dev-mlops/torch-serve-image:latest']
   id: docker push torch-serve
 
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: 'gcloud'
-#   args: [
-#     'container', 'clusters', 'create', '${_CLUSTER_NAME}',
-#     '--zone=asia-northeast1', '--no-enable-autoupgrade', '--num-nodes=1'
-#     ]
-#   id: create-cluster
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args: [
+    'container', 'clusters', 'create', '${_CLUSTER_NAME}',
+    '--zone=asia-northeast1', '--no-enable-autoupgrade', '--num-nodes=1'
+    ]
+  id: create-cluster
 
-# - name: gcr.io/cloud-builders/gke-deploy
-#   args: ['run', '--filename=k8s', '--location=asia-northeast1', '--cluster=${_CLUSTER_NAME}']
-#   id: GKE-deploy
+- name: gcr.io/cloud-builders/gke-deploy
+  args: ['run', '--filename=k8s', '--location=asia-northeast1', '--cluster=${_CLUSTER_NAME}']
+  id: GKE-deploy
