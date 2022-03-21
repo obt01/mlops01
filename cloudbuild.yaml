@@ -7,7 +7,8 @@ steps:
   args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f','Dockerfile.torchserve', '.']
   id: docker-build-torchserve
 
-- name: gcr.io/cloud-builders/gcloud
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
   args: [
     'container', 'clusters', 'create', '${_CLUSTER_NAME}',
     '--zone=asia-northeast1', '--no-enable-autoupgrade'
