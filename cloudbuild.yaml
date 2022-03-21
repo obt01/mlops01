@@ -3,18 +3,20 @@ steps:
   args: ['build', '-t', 'gcr.io/dev-mlops/proxy-image', '-f', 'Dockerfile.proxy']
   id: docker build proxy
 images: 'gcr.io/dev-mlops/proxy-image:latest'
+
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f','Dockerfile.torchserve']
   id: docker-build-torchserve
 images: 'gcr.io/dev-mlops/torch-serve-image:latest'
+
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
   args:
   - '-c'
   - |
-    gcloud container clusters create \
-    --zone=asia-northeast1 \
-    --no-enable-autoupgrade
+    'gcloud container clusters create' \
+    '--zone=asia-northeast1' \
+    '--no-enable-autoupgrade'
   id: 'create-cluster'
 - name: 'gcr.io/cloud-builders/gke-deploy'
   args:
