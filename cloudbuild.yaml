@@ -2,12 +2,14 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: docker-build-proxy
   args: ['build','-t','gcr.io/dev-mlops/proxy-image','-f','Dockerfile.proxy']
-images: ['gcr.io/dev-mlops/proxy-image']
+images:
+- 'gcr.io/dev-mlops/proxy-image'
 
 - name: 'gcr.io/cloud-builders/docker'
   id: docker-build-torchserve
   args: ['build','-t','gcr.io/dev-mlops/torch-serve-image','-f','Dockerfile.torchserve']
-images: ['gcr.io/dev-mlops/torch-serve-image']
+images:
+- 'gcr.io/dev-mlops/torch-serve-image'
 
 - name: gcr.io/cloud-builders/gcloud
   id: create-cluster
