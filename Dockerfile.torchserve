@@ -4,7 +4,6 @@ ARG HOME_DIR=/workspace
 ENV MODEL_NAME resnet101
 
 WORKDIR ${HOME_DIR}
-ADD ./requirements_pred.txt ${HOME_DIR}
 COPY ./models/output_torch_model_file.py ${HOME_DIR}
 COPY ./data ${HOME_DIR}/data
 

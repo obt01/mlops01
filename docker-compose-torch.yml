@@ -10,12 +10,12 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8010:8010"
     depends_on:
       - torch-serve
     tty: true
  
-  torch-serve-test:
+  torch-serve:
     container_name: torch-serve
     build:
       dockerfile: Dockerfile.torchserve
@@ -27,7 +27,15 @@ services:
       - "8080:8080"
       - "8081:8081"
       - "8082:8082"
-        # - "8083:8083"
-        # - "7070:7070"
-        # - "7071:7071"
+      - "8083:8083"
+      - "7070:7070"
+      - "7071:7071"
     tty: true
+
+  redis:
+    container_name: redis
+    build:
+      dockerfile: Dockerfile.redis
+      context: .
+    ports:
+      - "6379:6379"

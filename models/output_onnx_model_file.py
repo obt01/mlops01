@@ -2,16 +2,13 @@ import torch
 import torchvision
 import os
 import onnxruntime
-from src.ml.prediction import ImageClassifier
+from src.ml.prediction_onnx import ImageClassifier
 from src.configure import ModelConfig as conf
 
 
 MODEL_NAME = "resnet101"
 
 def load_model(model_name: str):
-    """
-    モデルをロード
-    """
     model = getattr(torchvision.models, model_name)(pretrained=True)
     return model
 

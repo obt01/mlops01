@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy-deployment
+  labels:
+    app: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+    spec:
+      containers:
+      - name: proxy
+        image: gcr.io/dev-mlops/proxy-image:latest
+        ports:
+        - containerPort: 8010
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: torch-serve-deployment
+  labels:
+    app: torch-serve
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: torch-serve
+  template:
+    metadata:
+      labels:
+        app: torch-serve
+    spec:
+      containers:
+      - name: torch-serve
+        image: gcr.io/dev-mlops/torch-serve-image:latest
+        ports:
+        - containerPort: 8080
+  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
