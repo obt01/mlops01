@@ -1,31 +1,31 @@
 steps:
-  # Docker build&push proxy
-  - name: 'gcr.io/cloud-builders/docker'
-    id: docker-build-proxy
-    args: [ 'build', '-t', 'gcr.io/dev-mlops/proxy-image', '-f', 'Dockerfile.proxy' ]
-  images: ['gcr.io/dev-mlops/proxy-image']
+# Docker build&push proxy
+- name: 'gcr.io/cloud-builders/docker'
+  id: docker-build-proxy
+  args: [ 'build', '-t', 'gcr.io/dev-mlops/proxy-image', '-f', 'Dockerfile.proxy' ]
+images: ['gcr.io/dev-mlops/proxy-image']
 
-  # Docker build&push TorchServe
-  - name: 'gcr.io/cloud-builders/docker'
-    id: docker-build-torchserve
-    args: [ 'build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f', 'Dockerfile.torchserve' ]
-  images: ['gcr.io/dev-mlops/torch-serve-image']
+# Docker build&push TorchServe
+- name: 'gcr.io/cloud-builders/docker'
+  id: docker-build-torchserve
+  args: [ 'build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f', 'Dockerfile.torchserve' ]
+images: ['gcr.io/dev-mlops/torch-serve-image']
 
-  # Create cluster
-  - name: gcr.io/cloud-builders/gcloud
-    id: create-cluster
-    entrypoint: 'bash'
-    args:
-    - '-c'
-    - '|'
-    - 'gcloud container clusters create' \
-        '--zone=asia-northeast1' \
-        '--no-enable-autoupgrade'
+# Create cluster
+- name: gcr.io/cloud-builders/gcloud
+  id: create-cluster
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - '|'
+  - 'gcloud container clusters create' \
+      '--zone=asia-northeast1' \
+      '--no-enable-autoupgrade'
 
-  # Deploy container image to GKE
-  - name: "gcr.io/cloud-builders/gke-deploy"
-    args:
-    - 'run' \
-        '--filename=k8s' \
-        '--location=asia-northeast1' \
-        '--cluster=${_CLUSTER_NAME}'
+# Deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - 'run' \
+      '--filename=k8s' \
+      '--location=asia-northeast1' \
+      '--cluster=${_CLUSTER_NAME}'
