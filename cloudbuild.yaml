@@ -11,7 +11,7 @@ steps:
   entrypoint: 'gcloud'
   args: [
     'container', 'clusters', 'create', '${_CLUSTER_NAME}',
-    '--zone=asia-northeast1', '--no-enable-autoupgrade'
+    '--zone=asia-northeast1', '--no-enable-autoupgrade', '--num-nodes=1'
     ]
   id: create-cluster
 
