@@ -2,12 +2,12 @@ steps:
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/dev-mlops/proxy', '-f', 'Dockerfile.proxy', '.']
   id: docker build proxy
-images: ['gcr.io/dev-mlops/proxy-image']
+images: ['gcr.io/dev-mlops/proxy-image:${SHORT_SHA}']
 
-# - name: gcr.io/cloud-builders/docker
-#   args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f','Dockerfile.torchserve']
-#   id: docker-build-torchserve
-# images: ['gcr.io/dev-mlops/torch-serve-image']
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f','Dockerfile.torchserve', '.']
+  id: docker-build-torchserve
+images: ['gcr.io/dev-mlops/torch-serve-image:${SHORT_SHA}']
 
 # - name: gcr.io/cloud-builders/gcloud
 #   entrypoint: bash
