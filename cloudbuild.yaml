@@ -1,12 +1,12 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: docker-build-proxy
-  args: ['build', '-t', 'gcr.io/dev-mlops/proxy-image', '-f', 'Dockerfile.proxy']
+  args: ['build','-t','gcr.io/dev-mlops/proxy-image','-f','Dockerfile.proxy']
 images: ['gcr.io/dev-mlops/proxy-image']
 
 - name: 'gcr.io/cloud-builders/docker'
   id: docker-build-torchserve
-  args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f', 'Dockerfile.torchserve']
+  args: ['build','-t','gcr.io/dev-mlops/torch-serve-image','-f','Dockerfile.torchserve']
 images: ['gcr.io/dev-mlops/torch-serve-image']
 
 - name: gcr.io/cloud-builders/gcloud
@@ -20,6 +20,7 @@ images: ['gcr.io/dev-mlops/torch-serve-image']
   - --no-enable-autoupgrade
 
 - name: "gcr.io/cloud-builders/gke-deploy"
+  id: GKE-deploy
   args:
   - run
   - --filename=k8s
