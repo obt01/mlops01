@@ -2,12 +2,15 @@ FROM python:3.9-slim
 
 ENV APP_DIR /app
 WORKDIR ${APP_DIR}
+ARG REQUIREMENTS_TXT=requirements_proxy.txt
 
-COPY requirements.txt ${APP_DIR}
+COPY ${REQUIREMENTS_TXT} ${APP_DIR}
+COPY ./src ${APP_DIR}/src
+COPY ./run.sh ${APP_DIR}/run.sh
 
 RUN apt update && \
     pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements_proxy.txt
+    pip install --no-cache-dir -r ${REQUIREMENTS_TXT}
 
 COPY ./src/ ${APP_DIR}/src/
 
