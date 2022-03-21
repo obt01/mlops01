@@ -19,7 +19,6 @@ steps:
   args: ['run', '--filename=k8s', '--location=asia-northeast1', '--cluster=${_CLUSTER_NAME}']
   id: GKE-deploy
 
-images: [
-  'gcr.io/dev-mlops/torch-serve-image:${SHORT_SHA}',
-  'gcr.io/dev-mlops/proxy-image:${SHORT_SHA}'
-  ]
+images:
+- 'gcr.io/dev-mlops/torch-serve-image:${SHORT_SHA}'
+- 'gcr.io/dev-mlops/proxy-image:${SHORT_SHA}'
