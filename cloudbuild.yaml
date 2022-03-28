@@ -1,31 +1,42 @@
 steps:
 
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/dev-mlops/proxy', '-f', 'Dockerfile.proxy', '.']
-  id: docker build proxy
+- name: gcr.io/kaniko-project/executor
+  id: Build & Push proxy
+  args:
+  - --destination=gcr.io/$PROJECT_ID/proxy
+  - --cache=true
+  - --cache-ttl=6h
 
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/dev-mlops/torch-serve-image', '-f','Dockerfile.torchserve', '.']
-  id: docker-build-torchserve
+- name: gcr.io/kaniko-project/executor
+  id: Build & Push TorchServe
+  args:
+  - --destination=gcr.io/$PROJECT_ID/torch-serve-image
+  - --cache=true
+  - --cache-ttl=6h
 
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/dev-mlops/proxy:latest']
-  id: docker push proxy
-
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/dev-mlops/torch-serve-image:latest']
-  id: docker push torch-serve
-
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'gcloud'
-  args: [
-    'container', 'clusters', 'create', '${_CLUSTER_NAME}',
-    '--num-nodes=1', '--zone=asia-northeast1', '--no-enable-autoupgrade'
-    ]
-  id: create-cluster
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Create cluster
+  waitFor:
+  - Build & Push proxy
+  - Build & Push TorchServe
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    gcloud container clusters create \
+      ${_CLUSTER_NAME} \
+      --zone=asia-northeast1-a \
+      --num-nodes=1 \
+      --no-enable-autoupgrade || true
 
 - name: gcr.io/cloud-builders/gke-deploy
-  args: ['run', '--filename=k8s', '--location=asia-northeast1', '--cluster=${_CLUSTER_NAME}']
-  id: GKE-deploy
+  id: Deploy
+  waitFor:
+  - Create cluster
+  args:
+  - run
+  - --filename=k8s
+  - --location=asia-northeast1-a
+  - --cluster=${_CLUSTER_NAME}
 
-timeout: 1200s
+timeout: 2400s
