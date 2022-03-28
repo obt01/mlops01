@@ -3,9 +3,17 @@ from PIL import Image
 import requests
 from src.cache import redis_client
 import time
+import json
+
+def get_labels():
+    with open("data/resnet_labels.json") as f:
+        labels = json.load(f)
+        labels = list(labels)
+    return labels
 
 class ImageClassifier:
     PREDICT_URL = "http://host.docker.internal:8080/predictions/resnet101"
+    labels = get_labels()
 
     @classmethod
     def image_to_byte_array(cls, image: Image, image_format: str = "JPEG"):
@@ -25,10 +33,19 @@ class ImageClassifier:
             if cache_data is not None:
                 return cache_data
         res = requests.post(cls.PREDICT_URL, data=img_bytes)
-        time.sleep(5)
+        time.sleep(3)
         output = res.json()
         if res.status_code != 200:
             return output
+        output = cls.idx2labels(output)
         if use_cache:
             redis_client.save_data_job(key=str(img_bytes), value=output)
         return output
+
+    @classmethod
+    def idx2labels(cls, output: dict):
+        new_output = {}
+        for k, v in output.items():
+            label_name = cls.labels[int(k)]
+            new_output.setdefault(label_name, v)
+        return new_output

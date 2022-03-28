@@ -3,9 +3,23 @@ kind: Service
 metadata:
   name: proxy-service
 spec:
+  type: LoadBalancer
   selector:
     app: proxy
   ports:
     - protocol: TCP
       port: 8010
       targetPort: 8010
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: torch-serve-service
+spec:
+  type: ClusterIP
+  selector:
+    app: proxy
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

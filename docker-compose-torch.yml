@@ -35,7 +35,7 @@ services:
   redis:
     container_name: redis
     build:
-      dockerfile: Dockerfile.redis
+      dockerfile: redis:latest
       context: .
     ports:
       - "6379:6379"

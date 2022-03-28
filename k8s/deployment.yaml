@@ -19,6 +19,10 @@ spec:
         image: gcr.io/dev-mlops/proxy-image:latest
         ports:
         - containerPort: 8010
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
 
 apiVersion: apps/v1
 kind: Deployment
@@ -27,7 +31,7 @@ metadata:
   labels:
     app: torch-serve
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: torch-serve
@@ -41,25 +45,3 @@ spec:
         image: gcr.io/dev-mlops/torch-serve-image:latest
         ports:
         - containerPort: 8080
-  
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-deployment
-  labels:
-    app: redis
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis
-  template:
-    metadata:
-      labels:
-        app: redis
-    spec:
-      containers:
-      - name: redis
-        image: redis:latest
-        ports:
-        - containerPort: 6379
