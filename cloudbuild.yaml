@@ -44,9 +44,9 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Create cluster
-  waitFor:
-  - Build & Push proxy
-  - Build & Push TorchServe
+  # waitFor:
+  # - Build & Push proxy
+  # - Build & Push TorchServe
   entrypoint: /bin/sh
   args:
   - '-c'
