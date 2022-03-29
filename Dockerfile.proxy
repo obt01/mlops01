@@ -6,6 +6,7 @@ ARG REQUIREMENTS_TXT=requirements_proxy.txt
 
 COPY ${REQUIREMENTS_TXT} ${APP_DIR}
 COPY ./src ${APP_DIR}/src
+COPY ./data ${APP_DIR}/data
 COPY ./run.sh ${APP_DIR}/run.sh
 
 RUN apt update && \
@@ -15,8 +16,6 @@ RUN apt update && \
 COPY ./src/ ${APP_DIR}/src/
 
 ENV PYTHONPATH /app
-# RUN export PYTHONPATH="/app/src"
-# RUN echo 'export PYTHONPATH="/app/src"' > ~/.bashrc
 
 COPY ./run.sh ${APP_DIR}
 RUN chmod +x ${APP_DIR}/run.sh
