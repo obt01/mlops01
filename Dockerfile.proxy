@@ -20,3 +20,4 @@ ENV PYTHONPATH /app
 COPY ./run.sh ${APP_DIR}
 RUN chmod +x ${APP_DIR}/run.sh
 CMD ["./run.sh"]
+
